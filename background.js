@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         });
         chrome.pageAction.show(sender.tab.id);
     }
-    if (request.method === 'possible-fingerprint' ) {
+    if (request.method === 'possible-fingerprint') {
         console.log(sender.tab);
     }
 });
@@ -49,8 +49,8 @@ chrome.tabs.onRemoved.addListener(tabId => delete cache[tabId]);
     const startup = () => {
 
         chrome.contextMenus.create({
-            id: 'add-to-whitelist',
-            title: '添加到白名单',
+            id: 'reset-random-seed',
+            title: '重置浏览器指纹',
             contexts: ['page_action']
         });
 
@@ -83,19 +83,37 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         });
 
 
-    }
-
-    else if (info.menuItemId === 'add-to-whitelist') {
+    } else if (info.menuItemId === 'reset-random-seed') {
         const url = tab.url || info.pageUrl;
-        if (url && url.startsWith('http')) {
-            const {hostname} = new URL(url);
-            if (window.list.indexOf(hostname) === -1) {
-                window.list.push(hostname);
-                localStorage.setItem('list', JSON.stringify(window.list));
-            }
 
-            alert('[' + hostname + '] 成功加入白名单');
-        }
+        //清空配置
+        chrome.tabs.executeScript(tab.id, {
+            code: `
+               delete window.localStorage['finger_canvas_inject'];
+               delete window.localStorage['finger_webgl_inject'];
+               delete window.localStorage['finger_audio_inject'];
+               delete window.localStorage['finger_font_inject'];
+               
+            `
+        });
+
+        alert("重置浏览器指纹成功，重载页面后生效.\n");
+
+        //发送消息
+        // chrome.runtime.sendMessage({
+        //     method: 'reset-random-seed'
+        // });
+
+
+        // if (url && url.startsWith('http')) {
+        //     const {hostname} = new URL(url);
+        //     if (window.list.indexOf(hostname) === -1) {
+        //         window.list.push(hostname);
+        //         localStorage.setItem('list', JSON.stringify(window.list));
+        //     }
+        //
+        //     alert('[' + hostname + '] 成功加入白名单');
+        // }
 
     }
 
