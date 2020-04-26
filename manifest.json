@@ -1,0 +1,54 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "name": "浏览器指纹防火墙",
+  "description": "阻止浏览器获取画布,3D绘画,字体等指纹特征,避免用户隐私泄露",
+
+  "icons": {
+    "16": "data/icons/enabled/16.png",
+    "19": "data/icons/enabled/19.png",
+    "32": "data/icons/enabled/32.png",
+    "38": "data/icons/enabled/38.png",
+    "48": "data/icons/enabled/48.png",
+    "64": "data/icons/enabled/64.png",
+    "128": "data/icons/enabled/128.png",
+    "256": "data/icons/enabled/256.png"
+  },
+
+  "permissions": [
+    "*://*/*",
+    "notifications",
+    "storage",
+    "webNavigation",
+    "contextMenus"
+  ],
+
+  "homepage_url": "http://www.dzurl.top",
+
+  "content_scripts": [{
+    "all_frames": true,
+    "matches": ["*://*/*"],
+    "match_about_blank": true,
+    "run_at": "document_start",
+    "js": [
+      "data/injects/canvas_inject.js",
+      "data/injects/font_inject.js",
+      "data/injects/webgl_inject.js",
+      "data/injects/audio_inject.js"
+    ]
+  }],
+
+  "background": {
+    "persistent": false,
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "page_action": {},
+  "options_ui": {
+    "page": "data/options/index.html",
+    "chrome_style": true
+  }
+}
