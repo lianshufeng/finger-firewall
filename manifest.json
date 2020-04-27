@@ -7,14 +7,14 @@
   "description": "阻止浏览器获取画布,3D绘画,字体等指纹特征,避免用户隐私泄露",
 
   "icons": {
-    "16": "data/icons/enabled/16.png",
-    "19": "data/icons/enabled/19.png",
-    "32": "data/icons/enabled/32.png",
-    "38": "data/icons/enabled/38.png",
-    "48": "data/icons/enabled/48.png",
-    "64": "data/icons/enabled/64.png",
-    "128": "data/icons/enabled/128.png",
-    "256": "data/icons/enabled/256.png"
+    "16": "data/icons/16.png",
+    "19": "data/icons/19.png",
+    "32": "data/icons/32.png",
+    "38": "data/icons/38.png",
+    "48": "data/icons/48.png",
+    "64": "data/icons/64.png",
+    "128": "data/icons/128.png",
+    "256": "data/icons/256.png"
   },
 
   "permissions": [

@@ -1,26 +1,6 @@
 'use strict';
 
 
-chrome.runtime.onMessage.addListener((request, sender) => {
-    if (request.method === 'possible-fingerprint') {
-        chrome.pageAction.setIcon({
-            tabId: sender.tab.id,
-            path: {
-                '16': 'data/icons/enabled/16.png',
-                '19': 'data/icons/enabled/19.png',
-                '32': 'data/icons/enabled/32.png',
-                '38': 'data/icons/enabled/38.png',
-                '48': 'data/icons/enabled/48.png',
-                '64': 'data/icons/enabled/64.png'
-            }
-        });
-        chrome.pageAction.show(sender.tab.id);
-    }
-    if (request.method === 'possible-fingerprint') {
-        console.log(sender.tab);
-    }
-});
-
 // whitelist
 window.list = JSON.parse(localStorage.getItem('list') || '[]');
 
@@ -145,3 +125,40 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         //setUninstallURL(page + '?rd=feedback&name=' + encodeURIComponent(name) + '&version=' + version);
     }
 }
+
+
+/**
+ * 获取消息
+ */
+chrome.runtime.onMessage.addListener(function (request, sender, respond) {
+    if (request['method'] == 'fingerprint') {
+        //更新图标
+        chrome.pageAction.setIcon({
+            tabId: sender.tab.id,
+            path: {
+                '16': 'data/icons/enabled/16.png',
+                '19': 'data/icons/enabled/19.png',
+                '32': 'data/icons/enabled/32.png',
+                '38': 'data/icons/enabled/38.png',
+                '48': 'data/icons/enabled/48.png',
+                '64': 'data/icons/enabled/64.png'
+            }
+        });
+        chrome.pageAction.show(sender.tab.id);
+
+        //更新计数器
+        if (!localStorage['finger_count']) {
+            localStorage['finger_count'] = 0;
+        } else {
+            localStorage['finger_count'] = parseInt(localStorage['finger_count']) + 1;
+        }
+        chrome.tabs.getAllInWindow(null, function(tabs){
+            for (var i = 0; i < tabs.length; i++) {
+                chrome.pageAction.setTitle({
+                    tabId: tabs[i].id,
+                    title: '浏览器指纹防火墙\n已保护隐私:' + localStorage['finger_count'] + '次'
+                })
+            }
+        });
+    }
+});
